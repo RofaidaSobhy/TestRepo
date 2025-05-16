@@ -254,6 +254,8 @@
 			dependencies = (
 			);
 			name = SportsApp;
+			packageProductDependencies = (
+			);
 			productName = SportsApp;
 			productReference = 22A6C6D12DD397A200674904 /* SportsApp.app */;
 			productType = "com.apple.product-type.application";
@@ -326,6 +328,8 @@
 				Base,
 			);
 			mainGroup = 22A6C6C82DD397A200674904;
+			packageReferences = (
+			);
 			productRefGroup = 22A6C6D22DD397A200674904 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
