@@ -42,14 +42,22 @@
                         <color key="textColor" name="white"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h5p-VI-Ppa">
-                        <rect key="frame" x="256.33333333333331" y="115" width="63.666666666666686" height="20"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h5p-VI-Ppa">
+                        <rect key="frame" x="240" y="115" width="101" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="101" id="I67-L5-C5d"/>
+                            <constraint firstAttribute="height" constant="20" id="iCB-YE-hrx"/>
+                        </constraints>
                         <fontDescription key="fontDescription" name="HiraMinProN-W3" family="Hiragino Mincho ProN" pointSize="20"/>
                         <color key="textColor" name="white"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X8G-17-1xp">
-                        <rect key="frame" x="29.999999999999996" y="115" width="63.666666666666657" height="20"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X8G-17-1xp">
+                        <rect key="frame" x="15" y="115" width="93" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="93" id="Ngj-A3-kUh"/>
+                            <constraint firstAttribute="height" constant="20" id="ijY-TK-4de"/>
+                        </constraints>
                         <fontDescription key="fontDescription" name="HiraMinProN-W3" family="Hiragino Mincho ProN" pointSize="20"/>
                         <color key="textColor" name="white"/>
                         <nil key="highlightedColor"/>
@@ -85,8 +93,8 @@
                 <constraint firstAttribute="bottom" secondItem="tuU-mc-cNS" secondAttribute="bottom" id="lyF-e1-dkg"/>
                 <constraint firstItem="tEd-dR-W7n" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="nQ3-FN-1O8"/>
                 <constraint firstItem="pRT-bx-0Yv" firstAttribute="leading" secondItem="PIQ-Le-9Tm" secondAttribute="trailing" constant="150" id="s02-1X-ga4"/>
-                <constraint firstAttribute="trailing" secondItem="h5p-VI-Ppa" secondAttribute="trailing" constant="30" id="sca-4p-CNQ"/>
-                <constraint firstItem="X8G-17-1xp" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="30" id="vPZ-P0-qmi"/>
+                <constraint firstAttribute="trailing" secondItem="h5p-VI-Ppa" secondAttribute="trailing" constant="9" id="sca-4p-CNQ"/>
+                <constraint firstItem="X8G-17-1xp" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="15" id="vPZ-P0-qmi"/>
                 <constraint firstAttribute="trailing" secondItem="tuU-mc-cNS" secondAttribute="trailing" id="xaD-Ui-LTF"/>
                 <constraint firstAttribute="bottom" secondItem="h5p-VI-Ppa" secondAttribute="bottom" constant="50" id="ygf-6Y-BUR"/>
             </constraints>

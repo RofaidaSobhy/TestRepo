@@ -6,13 +6,47 @@
 //
 
 import UIKit
+import Kingfisher
 
 class LeaguesDetailsCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
     let sectionTitles = ["Upcoming Events", "Latest Events", "Teams"]
+    
+    var upComingMatchs : [Match]?
+    var latestMatchs : [Match]?
+    
+    var allTeams : [TeamData]?
+    
+    let leaguesDetailsPresenter = LeaguesDetailsPresenter()
 
+    var leagueId : String?
+    var sport : SportType?
     override func viewDidLoad() {
         super.viewDidLoad()
+        //calling data
+        leagueId = "5"
+        sport = .football
+        
+        
+        leaguesDetailsPresenter.attachView(myViewController: self)
+        
+        
+        leaguesDetailsPresenter.getDataFromModel(
+            sport: sport ?? .football,
+            method: .fixtures,
+            leagueId: leagueId ?? "0",
+            fromDate: DateUtils.getFromDateOneYearAgo(),
+            toDate: DateUtils.getToDateOneYearAhead()
+        )
+        
+        leaguesDetailsPresenter.getTeamDataFromModel(
+            sport: sport ?? .football,
+            method: .teams,
+            leagueId: leagueId ?? "0"
+            
+        )
+        
+        
         setupNavigationBar()
         registerCellsAndHeaders()
         collectionView.setCollectionViewLayout(configureCompositionalLayout(), animated: true)
@@ -23,20 +57,68 @@ class LeaguesDetailsCollectionViewController: UICollectionViewController, UIColl
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10 // Ideally, this should be dynamic based on data
+        switch section{
+        case 0 :
+            return upComingMatchs?.count ?? 0
+
+        case 1 :
+            return latestMatchs?.count ?? 0
+
+           
+        default:
+            return allTeams?.count ?? 0
+        }
+        
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
         case 0:
             let cell = dequeueCell(ofType: UpComingEvensCollectionViewCell.self, for: indexPath)
+            
+            
+            cell.nameTeam1.text = upComingMatchs?[indexPath.row].eventHomeTeam
+            cell.nameTeam2.text = upComingMatchs?[indexPath.row].eventAwayTeam
+            
+            cell.matchDate.text = upComingMatchs?[indexPath.row].eventDate
+            
+            cell.matchTime.text = upComingMatchs?[indexPath.row].eventTime
+            
+            if let urlHomeTeamLogo = URL(string: upComingMatchs?[indexPath.row].homeTeamLogo ?? ""){
+                cell.logoTeam1.kf.setImage(with: urlHomeTeamLogo ,placeholder: UIImage(named: "1"))
+            }
+            if let urlAwayTeamLogo = URL(string: upComingMatchs?[indexPath.row].awayTeamLogo ?? ""){
+                cell.logoTeam2.kf.setImage(with: urlAwayTeamLogo ,placeholder: UIImage(named: "1"))
+            }
             return cell
         case 1:
             
             let cell = dequeueCell(ofType: LatestEventsCollectionViewCell.self, for: indexPath)
+            
+            cell.nameTeam1.text = latestMatchs?[indexPath.row].eventHomeTeam
+            cell.nameTeam2.text = latestMatchs?[indexPath.row].eventAwayTeam
+            
+            cell.matchDate.text = latestMatchs?[indexPath.row].eventDate
+            
+            cell.matchTime.text = latestMatchs?[indexPath.row].eventTime
+            
+            cell.score.text = latestMatchs?[indexPath.row].eventFinalResult
+            
+            if let urlHomeTeamLogo = URL(string: latestMatchs?[indexPath.row].homeTeamLogo ?? ""){
+                cell.logoTeam1.kf.setImage(with: urlHomeTeamLogo ,placeholder: UIImage(named: "1"))
+            }
+            if let urlAwayTeamLogo = URL(string: latestMatchs?[indexPath.row].awayTeamLogo ?? ""){
+                cell.logoTeam2.kf.setImage(with: urlAwayTeamLogo ,placeholder: UIImage(named: "1"))
+            }
             return cell
         default:
             let cell =  dequeueCell(ofType: TeamCollectionViewCell.self, for: indexPath)
+            
+            cell.teamName.text = allTeams?[indexPath.row].teamName
+            
+            if let urlTeamLogo = URL(string: allTeams?[indexPath.row].teamLogo ?? ""){
+                cell.teamImage.kf.setImage(with: urlTeamLogo ,placeholder: UIImage(named: "1"))
+            }
             return cell
         }
     }
@@ -137,5 +219,27 @@ extension UICollectionViewCell {
 extension UICollectionReusableView {
     static var reuseIdentifier: String {
         return String(describing: self)
+    }
+}
+
+// MARK: - Dealing With Presenter "Fetching Data"
+extension LeaguesDetailsCollectionViewController {
+    func renderLeaguesDetailsToView(result : LeaguesDetailsResponse){
+        let allMatches = result.result ?? []
+
+           upComingMatchs = allMatches.filter { $0.eventFinalResult == nil || $0.eventFinalResult  == "-" }
+           latestMatchs = allMatches.filter { !($0.eventFinalResult == nil || $0.eventFinalResult  == "-") }
+
+           DispatchQueue.main.async {
+               self.collectionView?.reloadData()
+           }
+    }
+    
+    func renderTeamDetailsToView(result : TeamDetailsResponse){
+         allTeams = result.result ?? []
+
+           DispatchQueue.main.async {
+               self.collectionView?.reloadData()
+           }
     }
 }
