@@ -20,11 +20,13 @@ class LeaguesDetailsCollectionViewController: UICollectionViewController, UIColl
     let leaguesDetailsPresenter = LeaguesDetailsPresenter()
 
     var leagueId : String?
+    var leagueName : String?
     var sport : SportType?
     override func viewDidLoad() {
         super.viewDidLoad()
         //calling data
         leagueId = "5"
+        leagueName = "leagueName"
         sport = .football
         
         
@@ -192,7 +194,7 @@ extension LeaguesDetailsCollectionViewController {
             .foregroundColor: customColor,
             .font: customFont
         ]
-        navigationItem.title = "League"
+        navigationItem.title = leagueName
     }
 
     private func registerCellsAndHeaders() {
@@ -219,6 +221,25 @@ extension UICollectionViewCell {
 extension UICollectionReusableView {
     static var reuseIdentifier: String {
         return String(describing: self)
+    }
+}
+
+
+// MARK: - UICollectionViewDelegate
+extension LeaguesDetailsCollectionViewController {
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        if indexPath.section == 2 {
+            let teamDetailsViewController :  TeamDetailsViewController = self.storyboard?.instantiateViewController(withIdentifier: "teamDetails") as! TeamDetailsViewController
+            
+            teamDetailsViewController.teamData = allTeams?[indexPath.row];
+            
+            let backItem = UIBarButtonItem()
+            backItem.title = leagueName
+            navigationItem.backBarButtonItem = backItem
+            self.navigationController?.pushViewController(teamDetailsViewController, animated: true)
+        }
+       
     }
 }
 
