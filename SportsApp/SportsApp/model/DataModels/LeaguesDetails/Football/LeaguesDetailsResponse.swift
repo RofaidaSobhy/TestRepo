@@ -6,9 +6,9 @@
 //
 
 import Foundation
-struct LeaguesDetailsResponse: Codable {
+struct LeaguesDetailsFootballResponse: Codable {
     
     var success : Int?
-    var result  : [Match]?
+    var result  : [FootballMatch]?
     
 }

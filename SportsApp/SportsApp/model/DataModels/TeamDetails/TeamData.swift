@@ -14,7 +14,7 @@ struct TeamData: Codable {
     var players  : [Player]?
  
     enum CodingKeys: String, CodingKey {
-
+        
         case teamName = "team_name"
         case teamLogo = "team_logo"
         case players  = "players"

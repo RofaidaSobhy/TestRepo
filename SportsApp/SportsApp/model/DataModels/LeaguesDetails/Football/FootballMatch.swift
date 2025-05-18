@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Match: Codable {
+struct FootballMatch: Codable {
 
 
   var eventDate           : String?

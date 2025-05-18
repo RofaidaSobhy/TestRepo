@@ -13,15 +13,15 @@ class LeaguesDetailsPresenter {
     func attachView(myViewController: LeaguesDetailsCollectionViewController) {
         vc = myViewController
     }
-    
-    func getDataFromModel(
+    // MARK: - Football
+    func getFootballDataFromModel(
         sport: SportType,
         method: APIMethod,
         leagueId: String,
         fromDate: String,
         toDate: String
     ) {
-        NetworkService.fetchLeaguesDetailsData(
+        NetworkService.fetchLeaguesDetailsFootballData(
             sport: sport,
             method: method,
             leagueId: leagueId,
@@ -30,11 +30,78 @@ class LeaguesDetailsPresenter {
         ) { [weak self] res in
             guard let result = res else { return }
             DispatchQueue.main.async {
-                self?.vc?.renderLeaguesDetailsToView(result: result)
+                self?.vc?.renderLeaguesDetailsFootballToView(result: result)
             }
         }
     }
     
+    // MARK: - Cricket
+    func getCricketDataFromModel(
+        sport: SportType,
+        method: APIMethod,
+        leagueId: String,
+        fromDate: String,
+        toDate: String
+    ) {
+        NetworkService.fetchLeaguesDetailsCricketData(
+            sport: sport,
+            method: method,
+            leagueId: leagueId,
+            fromDate: fromDate,
+            toDate: toDate
+        ) { [weak self] res in
+            guard let result = res else { return }
+            DispatchQueue.main.async {
+                self?.vc?.renderLeaguesDetailsCricketToView(result: result)
+            }
+        }
+    }
+    
+    // MARK: - Basketball
+    func getBasketballDataFromModel(
+        sport: SportType,
+        method: APIMethod,
+        leagueId: String,
+        fromDate: String,
+        toDate: String
+    ) {
+        NetworkService.fetchLeaguesDetailsBasketballData(
+            sport: sport,
+            method: method,
+            leagueId: leagueId,
+            fromDate: fromDate,
+            toDate: toDate
+        ) { [weak self] res in
+            guard let result = res else { return }
+            DispatchQueue.main.async {
+                self?.vc?.renderLeaguesDetailsBasketballToView(result: result)
+            }
+        }
+    }
+    
+    // MARK: - Tennis
+    func getTennisDataFromModel(
+        sport: SportType,
+        method: APIMethod,
+        leagueId: String,
+        fromDate: String,
+        toDate: String
+    ) {
+        NetworkService.fetchLeaguesDetailsTennisData(
+            sport: sport,
+            method: method,
+            leagueId: leagueId,
+            fromDate: fromDate,
+            toDate: toDate
+        ) { [weak self] res in
+            guard let result = res else { return }
+            DispatchQueue.main.async {
+                self?.vc?.renderLeaguesDetailsTennisToView(result: result)
+            }
+        }
+    }
+    
+    // MARK: - TeamData
     func getTeamDataFromModel(
         sport: SportType,
         method: APIMethod,

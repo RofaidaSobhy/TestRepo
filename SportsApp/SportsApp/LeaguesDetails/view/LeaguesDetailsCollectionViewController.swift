@@ -12,8 +12,25 @@ class LeaguesDetailsCollectionViewController: UICollectionViewController, UIColl
 
     let sectionTitles = ["Upcoming Events", "Latest Events", "Teams"]
     
-    var upComingMatchs : [Match]?
-    var latestMatchs : [Match]?
+    var upComingFootballMatches : [FootballMatch]?
+    var latestFootballMatches : [FootballMatch]?
+    
+    var upComingCricketMatches : [CricketMatch]?
+    var latestCricketMatches : [CricketMatch]?
+    
+    var upComingBasketballMatches : [BasketballMatch]?
+    var latestBasketballMatches : [BasketballMatch]?
+    
+    var upComingTennisMatches : [TennisMatch]?
+    var latestTennisMatches : [TennisMatch]?
+    
+    
+    
+    
+    
+    var numUpComingMatches : Int?
+    var numLatestMatches : Int?
+    var numTeams : Int?
     
     var allTeams : [TeamData]?
     
@@ -24,7 +41,7 @@ class LeaguesDetailsCollectionViewController: UICollectionViewController, UIColl
     var sport : SportType?
     override func viewDidLoad() {
         super.viewDidLoad()
-        //calling data
+        
         leagueId = "5"
         leagueName = "leagueName"
         sport = .football
@@ -32,21 +49,78 @@ class LeaguesDetailsCollectionViewController: UICollectionViewController, UIColl
         
         leaguesDetailsPresenter.attachView(myViewController: self)
         
-        
-        leaguesDetailsPresenter.getDataFromModel(
-            sport: sport ?? .football,
-            method: .fixtures,
-            leagueId: leagueId ?? "0",
-            fromDate: DateUtils.getFromDateOneYearAgo(),
-            toDate: DateUtils.getToDateOneYearAhead()
-        )
-        
-        leaguesDetailsPresenter.getTeamDataFromModel(
-            sport: sport ?? .football,
-            method: .teams,
-            leagueId: leagueId ?? "0"
+        switch sport {
+        case .football :
             
-        )
+            leaguesDetailsPresenter.getFootballDataFromModel(
+                sport: sport ?? .football,
+                method: .fixtures,
+                leagueId: leagueId ?? "0",
+                fromDate: DateUtils.getFromDateOneYearAgo(),
+                toDate: DateUtils.getToDateOneYearAhead()
+            )
+            
+            leaguesDetailsPresenter.getTeamDataFromModel(
+                sport: sport ?? .football,
+                method: .teams,
+                leagueId: leagueId ?? "0"
+                
+            )
+            
+            
+        case .cricket :
+            
+            leaguesDetailsPresenter.getCricketDataFromModel(
+                sport: sport ?? .cricket,
+                method: .fixtures,
+                leagueId: leagueId ?? "0",
+                fromDate: "2022-03-13",
+                toDate: "2026-03-13"
+            )
+            
+            leaguesDetailsPresenter.getTeamDataFromModel(
+                sport: sport ?? .cricket,
+                method: .teams,
+                leagueId: leagueId ?? "0"
+                
+            )
+            
+    
+        case .basketball:
+            
+            leaguesDetailsPresenter.getBasketballDataFromModel(
+                sport: sport ?? .cricket,
+                method: .fixtures,
+                leagueId: leagueId ?? "0",
+                fromDate: "2024-05-23",
+                toDate: "2026-03-13"
+            )
+            
+            leaguesDetailsPresenter.getTeamDataFromModel(
+                sport: sport ?? .basketball,
+                method: .teams,
+                leagueId: leagueId ?? "0"
+                
+            )
+        default :
+           
+            leaguesDetailsPresenter.getTennisDataFromModel(
+                sport: sport ?? .tennis,
+                method: .fixtures,
+                leagueId: leagueId ?? "0",
+                fromDate: "2022-03-13",
+                toDate: "2026-03-13"
+            )
+            
+            leaguesDetailsPresenter.getTeamDataFromModel(
+                sport: sport ?? .tennis,
+                method: .teams,
+                leagueId: leagueId ?? "0"
+                
+            )
+
+        }
+        
         
         
         setupNavigationBar()
@@ -59,16 +133,18 @@ class LeaguesDetailsCollectionViewController: UICollectionViewController, UIColl
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        calcNumOfCells()
         switch section{
         case 0 :
-            return upComingMatchs?.count ?? 0
+            return numUpComingMatches ?? 0
 
         case 1 :
-            return latestMatchs?.count ?? 0
+            return numLatestMatches ?? 0
 
            
         default:
-            return allTeams?.count ?? 0
+            return numTeams ?? 0
         }
         
     }
@@ -76,46 +152,157 @@ class LeaguesDetailsCollectionViewController: UICollectionViewController, UIColl
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
         case 0:
+       
             let cell = dequeueCell(ofType: UpComingEvensCollectionViewCell.self, for: indexPath)
             
             
-            cell.nameTeam1.text = upComingMatchs?[indexPath.row].eventHomeTeam
-            cell.nameTeam2.text = upComingMatchs?[indexPath.row].eventAwayTeam
             
-            cell.matchDate.text = upComingMatchs?[indexPath.row].eventDate
             
-            cell.matchTime.text = upComingMatchs?[indexPath.row].eventTime
+            switch sport {
             
-            if let urlHomeTeamLogo = URL(string: upComingMatchs?[indexPath.row].homeTeamLogo ?? ""){
-                cell.logoTeam1.kf.setImage(with: urlHomeTeamLogo ,placeholder: UIImage(named: "1"))
+            case .football :
+                
+                
+                cell.nameTeam1.text = upComingFootballMatches?[indexPath.row].eventHomeTeam
+                cell.nameTeam2.text = upComingFootballMatches?[indexPath.row].eventAwayTeam
+                
+                cell.matchDate.text = upComingFootballMatches?[indexPath.row].eventDate
+                
+                cell.matchTime.text = upComingFootballMatches?[indexPath.row].eventTime
+                
+                if let urlHomeTeamLogo = URL(string: upComingFootballMatches?[indexPath.row].homeTeamLogo ?? ""){
+                    cell.logoTeam1.kf.setImage(with: urlHomeTeamLogo ,placeholder: UIImage(named: "1"))
+                }
+                if let urlAwayTeamLogo = URL(string: upComingFootballMatches?[indexPath.row].awayTeamLogo ?? ""){
+                    cell.logoTeam2.kf.setImage(with: urlAwayTeamLogo ,placeholder: UIImage(named: "1"))
+                }
+                
+            case .cricket :
+                cell.nameTeam1.text = upComingCricketMatches?[indexPath.row].eventHomeTeam
+                cell.nameTeam2.text = upComingCricketMatches?[indexPath.row].eventAwayTeam
+                
+                cell.matchDate.text = upComingCricketMatches?[indexPath.row].eventDateStart
+                
+                cell.matchTime.text = upComingCricketMatches?[indexPath.row].eventTime
+                
+                if let urlHomeTeamLogo = URL(string: upComingCricketMatches?[indexPath.row].eventHomeTeamLogo ?? ""){
+                    cell.logoTeam1.kf.setImage(with: urlHomeTeamLogo ,placeholder: UIImage(named: "1"))
+                }
+                if let urlAwayTeamLogo = URL(string: upComingCricketMatches?[indexPath.row].eventAwayTeamLogo ?? ""){
+                    cell.logoTeam2.kf.setImage(with: urlAwayTeamLogo ,placeholder: UIImage(named: "1"))
+                }
+            case .basketball :
+                cell.nameTeam1.text = upComingBasketballMatches?[indexPath.row].eventHomeTeam
+                cell.nameTeam2.text = upComingBasketballMatches?[indexPath.row].eventAwayTeam
+                
+                cell.matchDate.text = upComingBasketballMatches?[indexPath.row].eventDate
+                
+                cell.matchTime.text = upComingBasketballMatches?[indexPath.row].eventTime
+                
+                if let urlHomeTeamLogo = URL(string: upComingBasketballMatches?[indexPath.row].eventHomeTeamLogo ?? ""){
+                    cell.logoTeam1.kf.setImage(with: urlHomeTeamLogo ,placeholder: UIImage(named: "dummyPlayer"))
+                }
+                if let urlAwayTeamLogo = URL(string: upComingBasketballMatches?[indexPath.row].eventAwayTeamLogo ?? ""){
+                    cell.logoTeam2.kf.setImage(with: urlAwayTeamLogo ,placeholder: UIImage(named: "dummyPlayer"))
+                }
+            default :
+                cell.nameTeam1.text = upComingTennisMatches?[indexPath.row].eventFirstPlayer
+                cell.nameTeam2.text = upComingTennisMatches?[indexPath.row].eventSecondPlayer
+                
+                cell.matchDate.text = upComingTennisMatches?[indexPath.row].eventDate
+                
+                cell.matchTime.text = upComingTennisMatches?[indexPath.row].eventTime
+                
+                if let urlHomeTeamLogo = URL(string: upComingTennisMatches?[indexPath.row].eventFirstPlayerLogo ?? ""){
+                    cell.logoTeam1.kf.setImage(with: urlHomeTeamLogo ,placeholder: UIImage(named: "dummyPlayer"))
+                }
+                if let urlAwayTeamLogo = URL(string: upComingTennisMatches?[indexPath.row].eventSecondPlayerLogo ?? ""){
+                    cell.logoTeam2.kf.setImage(with: urlAwayTeamLogo ,placeholder: UIImage(named: "dummyPlayer"))
+                }
             }
-            if let urlAwayTeamLogo = URL(string: upComingMatchs?[indexPath.row].awayTeamLogo ?? ""){
-                cell.logoTeam2.kf.setImage(with: urlAwayTeamLogo ,placeholder: UIImage(named: "1"))
-            }
+            
+            
             return cell
         case 1:
             
             let cell = dequeueCell(ofType: LatestEventsCollectionViewCell.self, for: indexPath)
             
-            cell.nameTeam1.text = latestMatchs?[indexPath.row].eventHomeTeam
-            cell.nameTeam2.text = latestMatchs?[indexPath.row].eventAwayTeam
             
-            cell.matchDate.text = latestMatchs?[indexPath.row].eventDate
-            
-            cell.matchTime.text = latestMatchs?[indexPath.row].eventTime
-            
-            cell.score.text = latestMatchs?[indexPath.row].eventFinalResult
-            
-            if let urlHomeTeamLogo = URL(string: latestMatchs?[indexPath.row].homeTeamLogo ?? ""){
-                cell.logoTeam1.kf.setImage(with: urlHomeTeamLogo ,placeholder: UIImage(named: "1"))
+            switch sport {
+            case .football :
+                
+                cell.nameTeam1.text = latestFootballMatches?[indexPath.row].eventHomeTeam
+                cell.nameTeam2.text = latestFootballMatches?[indexPath.row].eventAwayTeam
+                
+                cell.matchDate.text = latestFootballMatches?[indexPath.row].eventDate
+                
+                cell.matchTime.text = latestFootballMatches?[indexPath.row].eventTime
+                
+                cell.score.text = latestFootballMatches?[indexPath.row].eventFinalResult
+                
+                if let urlHomeTeamLogo = URL(string: latestFootballMatches?[indexPath.row].homeTeamLogo ?? ""){
+                    cell.logoTeam1.kf.setImage(with: urlHomeTeamLogo ,placeholder: UIImage(named: "1"))
+                }
+                if let urlAwayTeamLogo = URL(string: latestFootballMatches?[indexPath.row].awayTeamLogo ?? ""){
+                    cell.logoTeam2.kf.setImage(with: urlAwayTeamLogo ,placeholder: UIImage(named: "1"))
+                }
+                
+            case .cricket :
+                cell.nameTeam1.text = latestCricketMatches?[indexPath.row].eventHomeTeam
+                cell.nameTeam2.text = latestCricketMatches?[indexPath.row].eventAwayTeam
+                
+                cell.matchDate.text = latestCricketMatches?[indexPath.row].eventDateStart
+                
+                cell.matchTime.text = latestCricketMatches?[indexPath.row].eventTime
+                
+                cell.score.text = (latestCricketMatches?[indexPath.row].eventHomeFinalResult ?? "")
+                + " - " + (latestCricketMatches?[indexPath.row].eventAwayFinalResult ?? "")
+                
+                if let urlHomeTeamLogo = URL(string: latestCricketMatches?[indexPath.row].eventHomeTeamLogo ?? ""){
+                    cell.logoTeam1.kf.setImage(with: urlHomeTeamLogo ,placeholder: UIImage(named: "1"))
+                }
+                if let urlAwayTeamLogo = URL(string: latestCricketMatches?[indexPath.row].eventAwayTeamLogo ?? ""){
+                    cell.logoTeam2.kf.setImage(with: urlAwayTeamLogo ,placeholder: UIImage(named: "1"))
+                }
+            case .basketball :
+                cell.nameTeam1.text = latestBasketballMatches?[indexPath.row].eventHomeTeam
+                cell.nameTeam2.text = latestBasketballMatches?[indexPath.row].eventAwayTeam
+                
+                cell.matchDate.text = latestBasketballMatches?[indexPath.row].eventDate
+                
+                cell.matchTime.text = latestBasketballMatches?[indexPath.row].eventTime
+                
+                cell.score.text = latestBasketballMatches?[indexPath.row].eventFinalResult
+                
+                if let urlHomeTeamLogo = URL(string: latestBasketballMatches?[indexPath.row].eventHomeTeamLogo ?? ""){
+                    cell.logoTeam1.kf.setImage(with: urlHomeTeamLogo ,placeholder: UIImage(named: "dummyPlayer"))
+                }
+                if let urlAwayTeamLogo = URL(string: latestBasketballMatches?[indexPath.row].eventAwayTeamLogo ?? ""){
+                    cell.logoTeam2.kf.setImage(with: urlAwayTeamLogo ,placeholder: UIImage(named: "dummyPlayer"))
+                }
+
+            default :
+                cell.nameTeam1.text = latestTennisMatches?[indexPath.row].eventFirstPlayer
+                cell.nameTeam2.text = latestTennisMatches?[indexPath.row].eventSecondPlayer
+                
+                cell.matchDate.text = latestTennisMatches?[indexPath.row].eventDate
+                
+                cell.matchTime.text = latestTennisMatches?[indexPath.row].eventTime
+                
+                cell.score.text = latestTennisMatches?[indexPath.row].eventFinalResult
+                
+                if let urlHomeTeamLogo = URL(string: latestTennisMatches?[indexPath.row].eventFirstPlayerLogo ?? ""){
+                    cell.logoTeam1.kf.setImage(with: urlHomeTeamLogo ,placeholder: UIImage(named: "dummyPlayer"))
+                }
+                if let urlAwayTeamLogo = URL(string: latestTennisMatches?[indexPath.row].eventSecondPlayer ?? ""){
+                    cell.logoTeam2.kf.setImage(with: urlAwayTeamLogo ,placeholder: UIImage(named: "dummyPlayer"))
+                }
+                
             }
-            if let urlAwayTeamLogo = URL(string: latestMatchs?[indexPath.row].awayTeamLogo ?? ""){
-                cell.logoTeam2.kf.setImage(with: urlAwayTeamLogo ,placeholder: UIImage(named: "1"))
-            }
+          
             return cell
         default:
             let cell =  dequeueCell(ofType: TeamCollectionViewCell.self, for: indexPath)
-            
             cell.teamName.text = allTeams?[indexPath.row].teamName
             
             if let urlTeamLogo = URL(string: allTeams?[indexPath.row].teamLogo ?? ""){
@@ -245,16 +432,97 @@ extension LeaguesDetailsCollectionViewController {
 
 // MARK: - Dealing With Presenter "Fetching Data"
 extension LeaguesDetailsCollectionViewController {
-    func renderLeaguesDetailsToView(result : LeaguesDetailsResponse){
-        let allMatches = result.result ?? []
+    
+    // MARK: - Football
+    func renderLeaguesDetailsFootballToView(result : LeaguesDetailsFootballResponse){
+        let allFootballMatches = result.result ?? []
 
-           upComingMatchs = allMatches.filter { $0.eventFinalResult == nil || $0.eventFinalResult  == "-" }
-           latestMatchs = allMatches.filter { !($0.eventFinalResult == nil || $0.eventFinalResult  == "-") }
+        // Parse and filter
+        upComingFootballMatches = allFootballMatches.filter {
+            guard let dateString = $0.eventDate,
+                  let matchDate = DateUtils.toDate(from: dateString) else { return false }
+            return matchDate >= Date()
+        }
 
-           DispatchQueue.main.async {
-               self.collectionView?.reloadData()
-           }
+        latestFootballMatches = allFootballMatches.filter {
+            guard let dateString = $0.eventDate,
+                  let matchDate = DateUtils.toDate(from: dateString) else { return false }
+            return matchDate < Date()
+        }
+
+        DispatchQueue.main.async {
+            self.collectionView?.reloadData()
+        }
     }
+
+    // MARK: - Cricket
+    
+    func renderLeaguesDetailsCricketToView(result : LeaguesDetailsCricketResponse){
+        let allCricketMatches = result.result ?? []
+
+        upComingCricketMatches = allCricketMatches.filter {
+            guard let dateString = $0.eventDateStart,
+                  let matchDate = DateUtils.toDate(from: dateString) else { return false }
+            return matchDate >= Date()
+        }
+
+        latestCricketMatches = allCricketMatches.filter {
+            guard let dateString = $0.eventDateStart,
+                  let matchDate = DateUtils.toDate(from: dateString) else { return false }
+            return matchDate < Date()
+        }
+
+        DispatchQueue.main.async {
+            self.collectionView?.reloadData()
+        }
+    }
+    
+    
+    // MARK: - Basketball
+    
+    func renderLeaguesDetailsBasketballToView(result : LeaguesDetailsBasketballResponse){
+        let allBasketballMatches = result.result ?? []
+
+        upComingBasketballMatches = allBasketballMatches.filter {
+            guard let dateString = $0.eventDate,
+                  let matchDate = DateUtils.toDate(from: dateString) else { return false }
+            return matchDate >= Date()
+        }
+
+        latestBasketballMatches = allBasketballMatches.filter {
+            guard let dateString = $0.eventDate,
+                  let matchDate = DateUtils.toDate(from: dateString) else { return false }
+            return matchDate < Date()
+        }
+
+        DispatchQueue.main.async {
+            self.collectionView?.reloadData()
+        }
+    }
+    
+    
+    // MARK: - Tennis
+    
+    func renderLeaguesDetailsTennisToView(result : LeaguesDetailsTennisResponse){
+        let allTennisMatches = result.result ?? []
+
+        upComingTennisMatches = allTennisMatches.filter {
+            guard let dateString = $0.eventDate,
+                  let matchDate = DateUtils.toDate(from: dateString) else { return false }
+            return matchDate >= Date()
+        }
+
+        latestTennisMatches = allTennisMatches.filter {
+            guard let dateString = $0.eventDate,
+                  let matchDate = DateUtils.toDate(from: dateString) else { return false }
+            return matchDate < Date()
+        }
+
+        DispatchQueue.main.async {
+            self.collectionView?.reloadData()
+        }
+    }
+
     
     func renderTeamDetailsToView(result : TeamDetailsResponse){
          allTeams = result.result ?? []
@@ -262,5 +530,34 @@ extension LeaguesDetailsCollectionViewController {
            DispatchQueue.main.async {
                self.collectionView?.reloadData()
            }
+    }
+}
+
+
+// MARK: - Number Of Cells
+extension LeaguesDetailsCollectionViewController {
+    
+    func calcNumOfCells() {
+        switch sport {
+        
+        case .football :
+            numUpComingMatches = upComingFootballMatches?.count ?? 0
+            numLatestMatches = latestFootballMatches?.count ?? 0
+            numTeams = allTeams?.count ?? 0
+    
+        case .basketball:
+            numUpComingMatches = upComingBasketballMatches?.count ?? 0
+            numLatestMatches = latestBasketballMatches?.count ?? 0
+            numTeams = allTeams?.count ?? 0
+
+        case .cricket :
+            numUpComingMatches = upComingCricketMatches?.count ?? 0
+            numLatestMatches = latestCricketMatches?.count ?? 0
+            numTeams = allTeams?.count ?? 0
+        
+        default :
+            numUpComingMatches = upComingTennisMatches?.count ?? 0
+            numLatestMatches = latestTennisMatches?.count ?? 0
+            numTeams = allTeams?.count ?? 0        }
     }
 }
