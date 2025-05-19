@@ -12,6 +12,8 @@ import Alamofire
 
 // MARK: - Network Protocol
 protocol NetworkProtocol {
+//    // MARK: - Leagues
+//    static func fetchLeagues(for sport: String, completion: @escaping ([League]) -> Void)
     
     // MARK: - LeaguesDetails
     
@@ -67,7 +69,22 @@ protocol NetworkProtocol {
 
 // MARK: - Network Service Implementation
 class NetworkService: NetworkProtocol {
-
+    // MARK: leagues
+//    static let APIKey = "0e577c9dd1e799ad376e436f569ed8f787aa178035c782cc6921d2f58af172ab"
+//
+//    static func fetchLeagues(for sport: String, completion: @escaping ([League]) -> Void) {
+//        let urlString = "https://apiv2.allsportsapi.com/\(sport)/?met=Leagues&APIkey=\(APIKey)"
+//
+//        AF.request(urlString).validate().responseDecodable(of: LeaguesResponse.self) { response in
+//            switch response.result {
+//            case .success(let data):
+//                completion(data.data)
+//            case .failure(let error):
+//                print("Error fetching leagues:", error)
+//                completion([])
+//            }
+//        }
+//    }
     // MARK: - LeaguesDetails
 
     // MARK: - Football
